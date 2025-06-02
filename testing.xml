@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<suite name="CrossBrowserSuite" parallel="tests" thread-count="2" outputdirectory="test-output">
+
+    <test name="Chrome">
+        <parameter name="browser" value="chrome"/>
+        <packages>
+            <package name="tests"/>
+        </packages>
+    </test>
+    <test name="Edge">
+        <parameter name="browser" value="edge"/>
+        <packages>
+            <package name="tests"/>
+        </packages>
+    </test>
+</suite>
