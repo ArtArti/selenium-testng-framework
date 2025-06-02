@@ -43,14 +43,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <systemPropertyVariables>
-                        <org.uncommons.reportng.escape-output>false</org.uncommons.reportng.escape-output>
-                        <testng.output.dir>${project.basedir}/test-output</testng.output.dir>
-                    </systemPropertyVariables>
-
                     <suiteXmlFiles>
                         <suiteXmlFile>testing.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <systemPropertyVariables>
+                        <testng.output.dir>${project.basedir}/test-output</testng.output.dir>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
