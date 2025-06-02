@@ -23,7 +23,7 @@ jobs:
       - name: Install Maven
         run: sudo apt-get install maven -y
 
-      - name: Build and Run Tests
+      - name: Run Tests with Maven
         run: mvn clean test
 
       - name: Upload TestNG Reports
