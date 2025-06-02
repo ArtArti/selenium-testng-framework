@@ -25,3 +25,10 @@ jobs:
 
       - name: Build and Run Tests
         run: mvn clean test
+
+      - name: Upload TestNG Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestNG-Reports
+          path: test-output/
