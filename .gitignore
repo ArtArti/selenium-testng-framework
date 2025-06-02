@@ -33,6 +33,8 @@ build/
 
 ### VS Code ###
 .vscode/
+/test-output/
+/target/
 
 ### Mac OS ###
 .DS_Store

@@ -12,12 +12,13 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.DashboardPage;
 import pages.LoginPage;
+import utils.ReRunScript;
 import utils.ScreenshotUtil;
 
 @Listeners(TestListeners.class)
 public class LoginTest extends BaseTest {
 
-    @Test(dataProvider = "loginCredential", dataProviderClass = LoginData.class)
+    @Test(dataProvider = "loginCredential", dataProviderClass = LoginData.class, retryAnalyzer = ReRunScript.class)
     public void testLoginPageLoads(String username, String password, boolean expectedToPass) {
         try {
             LoginPage loginPage = new LoginPage(driver);

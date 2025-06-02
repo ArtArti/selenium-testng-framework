@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ master]
 
 jobs:
   test:
@@ -23,12 +23,19 @@ jobs:
       - name: Install Maven
         run: sudo apt-get install maven -y
 
-      - name: Run Tests with Maven
+      - name: Build and Run Tests
         run: mvn clean test
 
-      - name: Upload TestNG Reports
+      - name: Upload TestNG test-output
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: TestNG-Reports
+          name: TestNG-TestOutput
           path: test-output/
+
+      - name: Upload Surefire Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Surefire-Reports
+          path: target/surefire-reports/
