@@ -18,39 +18,7 @@ public class TestListeners implements ITestListener {
     }
 
     private WebDriver getDriver() {
-        return WebDriverManagerUtil.getDriver("chrome"); // just for access; real driver is thread-local
-    }
-
-    @Override
-    public void onTestStart(ITestResult result) {
-        Reporter.log("🚀 Test started: " + result.getName(), true);
-    }
-
-    @Override
-    public void onTestSuccess(ITestResult result) {
-        Reporter.log("✅ Test passed: " + result.getName(), true);
-    }
-
-    @Override
-    public void onTestFailure(ITestResult result) {
-        Reporter.log("❌ Test failed: " + result.getName(), true);
-
-        WebDriver driver = getDriver();
-        if (driver != null) {
-            String fileName = "Failed_" + result.getName() + "_" + getTimeStamp();
-            ScreenshotUtil.captureScreenshot(driver, fileName);
-        }
-    }
-
-    @Override
-    public void onTestSkipped(ITestResult result) {
-        Reporter.log("⚠️ Test skipped: " + result.getName(), true);
-
-        WebDriver driver = getDriver();
-        if (driver != null) {
-            String fileName = "Skipped_" + result.getName() + "_" + getTimeStamp();
-            ScreenshotUtil.captureScreenshot(driver, fileName);
-        }
+        return WebDriverManagerUtil.getDriver(); // Should be thread-safe now
     }
 
     @Override
@@ -61,5 +29,48 @@ public class TestListeners implements ITestListener {
     @Override
     public void onFinish(ITestContext context) {
         Reporter.log("📕=== Test Suite finished: " + context.getName() + " ===", true);
+    }
+
+    @Override
+    public void onTestStart(ITestResult result) {
+        Reporter.log("🚀 Test started: " + result.getMethod().getMethodName(), true);
+    }
+
+    @Override
+    public void onTestSuccess(ITestResult result) {
+        Reporter.log("✅ Test passed: " + result.getMethod().getMethodName(), true);
+
+        // Optional: capture screenshot on success (if needed for audit)
+        /*
+        WebDriver driver = getDriver();
+        if (driver != null) {
+            String fileName = "Passed_" + result.getName() + "_" + getTimeStamp();
+            ScreenshotUtil.captureScreenshot(driver, fileName);
+        }
+        */
+    }
+
+    @Override
+    public void onTestFailure(ITestResult result) {
+        Reporter.log("❌ Test failed: " + result.getMethod().getMethodName(), true);
+        Reporter.log("🔎 Reason: " + result.getThrowable(), true);
+
+        WebDriver driver = getDriver();
+        if (driver != null) {
+            String fileName = "Failed_" + result.getMethod().getMethodName() + "_" + getTimeStamp();
+            ScreenshotUtil.captureScreenshot(driver, fileName);
+        }
+    }
+
+    @Override
+    public void onTestSkipped(ITestResult result) {
+        Reporter.log("⚠️ Test skipped: " + result.getMethod().getMethodName(), true);
+        Reporter.log("🔎 Reason: " + result.getThrowable(), true);
+
+        WebDriver driver = getDriver();
+        if (driver != null) {
+            String fileName = "Skipped_" + result.getMethod().getMethodName() + "_" + getTimeStamp();
+            ScreenshotUtil.captureScreenshot(driver, fileName);
+        }
     }
 }

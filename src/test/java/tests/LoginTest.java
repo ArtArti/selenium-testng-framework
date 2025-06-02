@@ -12,58 +12,49 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.DashboardPage;
 import pages.LoginPage;
-import utils.ReRunScript;
 import utils.ScreenshotUtil;
 
 @Listeners(TestListeners.class)
 public class LoginTest extends BaseTest {
 
-    @Test(dataProvider = "loginCredential", dataProviderClass = LoginData.class, retryAnalyzer = ReRunScript.class)
-    public void testLoginPageLoads(String username, String password) {
+    @Test(dataProvider = "loginCredential", dataProviderClass = LoginData.class)
+    public void testLoginPageLoads(String username, String password, boolean expectedToPass) {
         try {
             LoginPage loginPage = new LoginPage(driver);
             loginPage.enterCredentials(username, password);
             Reporter.log("Login attempted for user: " + username, true);
 
-            // Handle alert
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            wait.until(ExpectedConditions.alertIsPresent());
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            Reporter.log("Alert Text: " + alertText, true);
-            alert.accept();
+            WebDriverWait wait = new WebDriverWait(driver, 5);
 
-            if (alertText.equalsIgnoreCase("login Success")) {
-                Reporter.log("Login successful for user: " + username, true);
-
-                // Proceed to DashboardPage test
-                String currentUrl = driver.getCurrentUrl();
-                Reporter.log("Current URL after login: " + currentUrl, true);
-
-                DashboardPage dashboardPage = new DashboardPage(driver);
-
-                // Check if Dashboard is visible
-                Assert.assertTrue(dashboardPage.isdashboardvisible(), "Dashboard not visible for user: " + username);
-                Reporter.log("Dashboard is visible for user: " + username, true);
-
-                // Additional textbox check (if you have any specific method for it)
-//                Assert.assertTrue(dashboardPage.isSearchBoxVisible(), "Search box not visible on dashboard for user: " + username);
-
-                // Screenshot
-                ScreenshotUtil.captureScreenshot(driver, "Dashboard_" + username);
-
-            } else {
-                Reporter.log("❌ Invalid login for user: " + username, true);
-                ScreenshotUtil.captureScreenshot(driver, "InvalidLogin_" + username);
-                Assert.fail("Invalid login attempt should not proceed for user: " + username);
+            String alertText = "";
+            boolean alertPresent = false;
+            try {
+                Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+                alertText = alert.getText();
+                alert.accept();
+                alertPresent = true;
+                Reporter.log("Alert text: " + alertText, true);
+            } catch (Exception e) {
+                Reporter.log("No alert appeared for user: " + username, true);
             }
 
+            boolean loginSuccess = alertPresent && alertText.equalsIgnoreCase("login Success");
+
+            if (expectedToPass) {
+                Assert.assertTrue(loginSuccess, "Expected login to succeed but it failed.");
+                DashboardPage dashboardPage = new DashboardPage(driver);
+                Assert.assertTrue(dashboardPage.isdashboardvisible(), "Dashboard not visible for user: " + username);
+                ScreenshotUtil.captureScreenshot(driver, "Dashboard_" + username);
+            } else {
+                Assert.assertFalse(loginSuccess, "Expected login to fail but it succeeded.");
+                ScreenshotUtil.captureScreenshot(driver, "InvalidLogin_" + username);
+            }
 
         } catch (Exception e) {
-            Reporter.log("Exception in testLoginPageLoads for user: " + username, true);
-            Reporter.log(e.getMessage(), true);
+            Reporter.log("Exception for user: " + username + " → " + e.getMessage(), true);
             ScreenshotUtil.captureScreenshot(driver, "Exception_" + username);
-            Assert.fail("Test failed due to exception for user: " + username + " - " + e.getMessage());
+            Assert.fail("Exception occurred for user: " + username + ": " + e.getMessage());
         }
     }
+
 }

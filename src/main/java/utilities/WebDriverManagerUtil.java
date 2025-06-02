@@ -29,6 +29,11 @@ public class WebDriverManagerUtil {
         return driver.get();
     }
 
+    public static WebDriver getDriver() {
+        return driver.get();
+    }
+
+
     public static void quitDriver() {
         if (driver.get() != null) {
             driver.get().quit();
