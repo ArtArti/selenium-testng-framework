@@ -23,6 +23,9 @@ jobs:
       - name: Install Maven
         run: sudo apt-get install -y maven
 
+      - name: Create test-output directory
+        run: mkdir -p test-output
+
       - name: Build and Run Tests
         run: mvn clean test
 
