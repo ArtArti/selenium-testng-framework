@@ -16,6 +16,7 @@ public class WebDriverManagerUtil {
             switch (browser.toLowerCase()) {
                 case "chrome":
                     WebDriverManager.chromedriver().setup();
+
                     ChromeOptions chromeOptions = new ChromeOptions();
 
                     // Chrome headless configuration
