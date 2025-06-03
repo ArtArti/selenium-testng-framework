@@ -16,7 +16,7 @@ public class BaseTest {
     @Parameters("browser")
     @BeforeMethod
     public void setup(String browser) {
-        driver = WebDriverManagerUtil.getDriver(browser);
+        driver = WebDriverManagerUtil.setUpDriver(browser);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         String baseUrl = ConfigReader.get("url");
         driver.get(baseUrl);

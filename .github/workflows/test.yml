@@ -1,4 +1,4 @@
-name: Run Selenium TestNG Tests
+name: Run Selenium TestNG Cross-Browser Tests
 
 on:
   push:
@@ -23,19 +23,24 @@ jobs:
       - name: Install Maven
         run: sudo apt-get install maven -y
 
-      - name: Install required browsers
+      - name: Install Google Chrome
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
-          sudo apt-get install -y microsoft-edge-stable || true  # Edge might not be available on all runners
 
-      - name: Display browser versions (for debugging)
+      - name: Install Microsoft Edge (optional, might fail)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y microsoft-edge-stable || true
+
+      - name: Display installed browser versions
         run: |
           google-chrome --version || true
           microsoft-edge --version || true
 
-      - name: Run Maven Tests with TestNG Suite
-        run: mvn clean test
+      - name: Run Maven Tests with TestNG Cross-Browser Suite
+        # Run tests via testng.xml which contains browser params for Chrome and Edge
+        run: mvn clean test -DsuiteXmlFile=testng.xml
 
       - name: Show test failures (if any)
         if: failure()

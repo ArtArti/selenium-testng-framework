@@ -7,7 +7,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class LoginPage {
     private final WebDriver driver;
-    private final WebDriverWait wait;
 
     // Locators for login fields
     private final By emailField = By.id("email");
@@ -16,7 +15,7 @@ public class LoginPage {
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
     }
 
     public void enterUsername(String username) {
