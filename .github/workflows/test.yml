@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master]
+    branches: [ master ]
 
 jobs:
   test:
@@ -21,14 +21,28 @@ jobs:
           java-version: '8'
 
       - name: Install Maven
-        run: sudo apt-get install maven -y
+        run: sudo apt-get install -y maven
 
       - name: Build and Run Tests
         run: mvn clean test
 
-      - name: Upload TestNG test-output
+      #  test result logs on failure
+      - name: Show test report if tests fail
+        if: failure()
+        run: cat target/surefire-reports/*.txt || true
+
+      # Surefire test report (test result logs)
+      - name: Upload Surefire Test Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: TestNG-testOutput
+          name: Surefire-test-report
+          path: target/surefire-reports/
+
+      # TestNG test-output folder if it exists
+      - name: Upload TestNG test-output folder
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestNG-test-output
           path: test-output/

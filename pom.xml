@@ -46,9 +46,6 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>testing.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <systemPropertyVariables>
-                        <testng.output.dir>${project.basedir}/test-output</testng.output.dir>
-                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
