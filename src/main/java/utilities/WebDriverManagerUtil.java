@@ -2,6 +2,7 @@ package utilities;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -15,8 +16,15 @@ public class WebDriverManagerUtil {
         if (driver.get() == null) {
             switch (browser.toLowerCase()) {
                 case "chrome":
-                    WebDriverManager.chromedriver().setup();
-                    driver.set(new ChromeDriver());
+                    WebDriverManager.chromedriver()
+                            .avoidResolutionCache()           // always fetch fresh driver
+                            .setup();
+                    ChromeOptions options = new ChromeOptions();
+                    options.addArguments("--no-sandbox");
+                    options.addArguments("--disable-dev-shm-usage");
+                    options.addArguments("--headless=new"); // for latest Chrome versions
+                    options.addArguments("--disable-gpu");
+                    driver.set(new ChromeDriver(options));
                     break;
                 case "edge":
                     WebDriverManager.edgedriver().setup();
@@ -27,6 +35,9 @@ public class WebDriverManagerUtil {
             }
             driver.get().manage().window().maximize();
         }
+        return driver.get();
+    }
+    public static WebDriver getDriver() {
         return driver.get();
     }
 
