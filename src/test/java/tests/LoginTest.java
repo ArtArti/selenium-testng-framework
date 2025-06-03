@@ -15,6 +15,7 @@ import pages.LoginPage;
 import utils.ReRunScript;
 import utils.ScreenshotUtil;
 
+
 @Listeners(TestListeners.class)
 public class LoginTest extends BaseTest {
 

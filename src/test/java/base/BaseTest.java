@@ -7,6 +7,8 @@ import org.testng.annotations.Parameters;
 import utilities.ConfigReader;
 import utilities.WebDriverManagerUtil;
 
+import java.util.concurrent.TimeUnit;
+
 
 public class BaseTest {
     public WebDriver driver;
@@ -15,7 +17,7 @@ public class BaseTest {
     @BeforeMethod
     public void setup(String browser) {
         driver = WebDriverManagerUtil.getDriver(browser);
-//        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         String baseUrl = ConfigReader.get("url");
         driver.get(baseUrl);
     }
