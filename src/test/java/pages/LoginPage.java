@@ -38,17 +38,4 @@ public class LoginPage {
         enterPassword(password);
         clickLogin();
     }
-
-//    public String getErrorMessage() {
-//        try {
-//            // Check if alert is present
-//            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-//            String alertText = alert.getText();
-//            alert.accept(); // Accepts the alert
-//            return alertText;
-//        } catch (TimeoutException | NoAlertPresentException e) {
-//            // Fallback: check if inline error is present (only if applicable
-//            return "No error message displayed.";
-//        }
-//    }
 }

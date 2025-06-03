@@ -39,15 +39,6 @@ public class TestListeners implements ITestListener {
     @Override
     public void onTestSuccess(ITestResult result) {
         Reporter.log("✅ Test passed: " + result.getMethod().getMethodName(), true);
-
-        // Optional: capture screenshot on success (if needed for audit)
-        /*
-        WebDriver driver = getDriver();
-        if (driver != null) {
-            String fileName = "Passed_" + result.getName() + "_" + getTimeStamp();
-            ScreenshotUtil.captureScreenshot(driver, fileName);
-        }
-        */
     }
 
     @Override
