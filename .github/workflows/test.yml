@@ -1,4 +1,4 @@
-name: Run Selenium TestNG Tests
+name: Cross Browser Selenium Tests
 
 on:
   push:
@@ -8,44 +8,38 @@ on:
 
 jobs:
   test:
+    name: Run Selenium Tests
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        browser: [chrome, edge]
+
+    env:
+      BROWSER: ${{ matrix.browser }}
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: Set up JDK 8
-        uses: actions/setup-java@v4
+      - name: Set up Java
+        uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '8'
+          distribution: 'temurin'
 
-      - name: Install Maven
+      - name: Set up Maven
         run: sudo apt-get install -y maven
 
-      - name: Create test-output directory
-        run: mkdir -p test-output
+      - name: Install Dependencies
+        run: mvn install -DskipTests
 
-      - name: Build and Run Tests
-        run: mvn clean test
+      - name: Run TestNG Tests on ${{ matrix.browser }}
+        run: mvn test -Dbrowser=${{ matrix.browser }}
 
-      #  test result logs on failure
-      - name: Show test report if tests fail
-        if: failure()
-        run: cat target/surefire-reports/*.txt || true
-
-      # Surefire test report (test result logs)
-      - name: Upload Surefire Test Report
+      - name: Archive Test Reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: Surefire-test-report
-          path: target/surefire-reports/
-
-      # TestNG test-output folder if it exists
-      - name: Upload TestNG test-output folder
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: TestNG-test-output
+          name: testng-reports-${{ matrix.browser }}
           path: test-output/
